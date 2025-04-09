@@ -21,16 +21,16 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          java-version: '17' # Use the correct Java version for your project
+          java-version: '17'
           distribution: 'temurin'
 
       # Step 3: Build the JAR file using Maven
       - name: Build with Maven
         run: mvn package -DskipTests
 
-      # Step 4: Debug the target directory (optional)
-      - name: Debug target directory
-        run: ls -R target
+      # Step 4: Debug target directory contents
+      - name: List target contents
+        run: ls -lh target
 
       # Step 5: Configure AWS credentials
       - name: Configure AWS credentials
@@ -45,12 +45,12 @@ jobs:
         id: login-ecr-public
         uses: aws-actions/amazon-ecr-login@v1
 
-      # Step 7: Build, tag, and push the Docker image to Amazon ECR Public
+      # Step 7: Build, tag, and push the Docker image
       - name: Build, tag, and push image to Amazon ECR Public
         env:
           ECR_REGISTRY: 867344428625.dkr.ecr.eu-central-1.amazonaws.com
           ECR_REPOSITORY: todoapp
           IMAGE_TAG: awstodoapplication
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG awstodoapplication
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
