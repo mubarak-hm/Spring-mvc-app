@@ -18,10 +18,11 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class DynamoDBConfig {
-    @Value("${aws.access.key}")
+    @Value("${aws.access-key}")
     private String amazonAWSAccessKey;
 
-    @Value("${aws.secret.key}")
+
+    @Value("${aws.secret-key}")
     private String amazonAWSSecretKey;
 
 
