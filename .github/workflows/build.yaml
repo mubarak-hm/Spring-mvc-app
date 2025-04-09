@@ -8,7 +8,9 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
 
-
+    defaults:
+      run:
+        working-directory: awstodoapplication
 
     steps:
       # Step 1: Checkout the code
@@ -43,7 +45,6 @@ jobs:
         id: login-ecr-public
         uses: aws-actions/amazon-ecr-login@v1
 
-
       # Step 7: Build, tag, and push the Docker image to Amazon ECR Public
       - name: Build, tag, and push image to Amazon ECR Public
         env:
@@ -51,5 +52,5 @@ jobs:
           ECR_REPOSITORY: todoapp
           IMAGE_TAG: awstodoapplication
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG awstodoapplication
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
