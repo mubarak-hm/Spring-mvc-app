@@ -1,0 +1,159 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .todo-form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        textarea {
+            height: 100px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .todo-list {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .todo-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .todo-item:last-child {
+            border-bottom: none;
+        }
+        .todo-title {
+            margin: 0;
+            flex: 1;
+        }
+        .completed .todo-title {
+            text-decoration: line-through;
+            color: #888;
+        }
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+        .actions a {
+            text-decoration: none;
+            color: #333;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+        .edit {
+            background-color: #FFC107;
+        }
+        .delete {
+            background-color: #F44336;
+            color: white !important;
+        }
+        .toggle {
+            background-color: #2196F3;
+            color: white !important;
+        }
+        .no-todos {
+            text-align: center;
+            padding: 20px;
+            color: #888;
+        }
+        .todo-details {
+            margin-top: 5px;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+<h1>Todo App</h1>
+
+<div class="todo-form">
+    <h2 th:text="${todo.id != null ? 'Edit Todo' : 'Add New Todo'}">Add New Todo</h2>
+    <form th:action="${todo.id != null ? '/todo/' + todo.id : '/todo'}" method="post">
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" id="title" name="title" th:value="${todo.title}" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" th:text="${todo.description}"></textarea>
+        </div>
+        <div class="form-group" th:if="${todo.id != null}">
+            <label>
+                <input type="checkbox" name="completed" th:checked="${todo.completed}">
+                Mark as completed
+            </label>
+        </div>
+        <button type="submit" th:text="${todo.id != null ? 'Update' : 'Add'}">Add</button>
+        <a th:if="${todo.id != null}" href="/" style="margin-left: 10px;">Cancel</a>
+    </form>
+</div>
+
+<div class="todo-list">
+    <h2>My Todos</h2>
+    <div th:if="${todos.empty}" class="no-todos">
+        No todos yet. Add one above!
+    </div>
+    <div th:each="item : ${todos}" class="todo-item" th:classappend="${item.completed ? 'completed' : ''}">
+        <div>
+            <h3 class="todo-title" th:text="${item.title}">Todo Title</h3>
+            <div class="todo-details" th:text="${item.description}">Description</div>
+        </div>
+        <div class="actions">
+            <a th:href="@{'/todo/' + ${item.id} + '/toggle'}" class="toggle">
+                <span th:text="${item.completed ? 'Mark Incomplete' : 'Mark Complete'}">Toggle</span>
+            </a>
+            <a th:href="@{'/todo/' + ${item.id}}" class="edit">Edit</a>
+            <a th:href="@{'/todo/' + ${item.id} + '/delete'}" class="delete"
+               onclick="return confirm('Are you sure you want to delete this todo?')">Delete</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
